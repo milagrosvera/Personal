@@ -1,5 +1,5 @@
 #include <iostream>
-#include <conio.h>
+
 using namespace std;
 
 void mostrarvec(int vec[], int dim)
@@ -70,7 +70,7 @@ int main()
         transpuesta(matriz,dim5);
 
 
-getch();
+
 
     
     return 0;
