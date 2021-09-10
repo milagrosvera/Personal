@@ -8,17 +8,14 @@ void mostrarvec(int vec[], int dim)
 		cout << vec[i] << '\t';
     cout << endl;
 }
-void reverso(int v[], int dim){
-       
-cout <<"El arreglo invertido es: "<< endl;
-        for(int i = --dim ; i >= 0; --i){
-            cout << v[i]<< '\t';
-            
+
+void reverso(int vi[],int vf[], int dim){
+        
+        for(int i = 0 ; i < dim; i++){
+            vi[i] = vf[dim -1 - i];
         }
         
 }
-
-
 void mostrarmat(int m[][5], int dfil)
 {
         const int dcol = 5; 
@@ -31,14 +28,15 @@ void mostrarmat(int m[][5], int dfil)
 
 }
 
-void transpuesta(int m[][5],int dfila){
+void transpuesta(int m[][5],int mf[][5],int dfila){
         const int dcol = 5;
         for (int i = 0; i < dfila; ++i) {
                 for (int j = 0; j < dcol; ++j)
-                        cout << m[j][i] << '\t';
-                cout << endl;
+                        
+             m[i][j] = mf[dfila - 1 -i][dcol -1-j ];
         }
 }
+
 
 int main()
 {
@@ -53,22 +51,31 @@ int main()
                             22, 41, 32, 11, 9,
                             39, 47, 14, 4, 23,
                             16, 38, 8, 27, 44};
+     int matrizaux[dim5][dim5];                      
+
+
+    int vec5aux[dim5];
+    int vec10aux[dim10];
 
     mostrarvec(vec5, dim5);
-    reverso(vec5, dim5);
+    reverso(vec5aux,vec5, dim5);
+    mostrarvec(vec5aux, dim5);
 
-    cout << "\n============================\n" << endl;
+cout << "\n============================\n" << endl;
 
-    mostrarvec(vec10, dim10);
-    reverso(vec10, dim10);
+     mostrarvec(vec10, dim10);
+    reverso(vec10aux,vec10, dim10);
+    mostrarvec(vec10aux, dim10);
 
-    cout <<"\n"<< endl;
+cout << "\n============================\n" << endl;
+
+ ;
     cout << "Matriz Original: " << endl;
         mostrarmat(matriz,dim5);
         cout <<"\n"<< endl;
     cout << "Matriz Transpuesta: " << endl;
-        transpuesta(matriz,dim5);
-
+        transpuesta(matrizaux, matriz,dim5);
+        mostrarmat(matrizaux,dim5);
 
 
 
