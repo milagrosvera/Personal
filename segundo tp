@@ -13,7 +13,6 @@ struct Datos{
 };
 
 void leerdatos(FILE*);
-void mostrar(FILE*);
 
 int main(){
 
