@@ -1,69 +1,239 @@
 #include <iostream>
-#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 using namespace std;
 
-struct Datos{
+typedef struct Registro{
 
-    int ID;
-    char Cliente[12];
-    char Producto[10];
-    float Valor;
+int ID;
 
-};
+char Cliente[12];
 
-void leerdatos(FILE*);
+char Producto[10];
 
-int main(){
+float Valor;
 
-    FILE*p = fopen("Datos.bin","r+b");
-int operacion;
+}Registro;
 
-cout<<"Leer datos<1>"<<endl;
-cout<<"Mostrar<2>"<<endl;
-cout<<"Despachar<3>"<<endl;
-cout<<"Salir<4>"<<endl;
 
-cin>>operacion;
+typedef struct NodoRegistro{
 
-switch(operacion){
+Registro info;
 
-case 1:
-    
-    leerdatos(p);
-    
-    
+NodoRegistro*Sgt;
+
+
+}NodoRegistro;
+
+void CargarListaClienteProducto(NodoRegistro*&,Registro);
+void MostrarArchivoYcargarLista(FILE*,NodoRegistro*&);
+void EliminarNodos(NodoRegistro*&);
+void MostrarLista(NodoRegistro*);
+int main()
+{
+
+int opcion = 1;
+
+bool bandera = false;
+
+
+NodoRegistro*InicioLista = NULL;
+
+FILE*p = fopen("Datos.bin","r+b");
+
+while(!bandera || opcion != 4){
+
+    /*
+    if(bandera){
+
+        cout<<endl<<endl;
+
+    }*/
+
+    cout<<"Leer datos<1>"<<endl;
+    cout<<"Mostrar   <2>"<<endl;
+    cout<<"Despacha  <3>"<<endl;
+    cout<<"Salir     <4>"<<endl;
+
+    cout<<endl<<"Ingrese una opcion: ";
+    cin>>opcion;
+
+
+    //system("cls");
+
+
+    if(opcion == 1 && !bandera){
+
+        bandera = true;
+
+       while(InicioLista != NULL){
+
+    EliminarNodos(InicioLista);
+
+          }
+
+      MostrarArchivoYcargarLista(p,InicioLista);
+
+    fclose(p);
+
+    }else{
+        if(bandera && opcion >=1 && opcion <= 4){
+
+    switch(opcion){
+
+          case 1:
+
+      p = fopen("Datos.bin","r+b");
+
+         while(InicioLista != NULL){
+
+      EliminarNodos(InicioLista);
+
+       }
+
+      MostrarArchivoYcargarLista(p,InicioLista);
+
+     fclose(p);
+
     break;
+
 case 2:
-
-    
+MostrarLista(InicioLista);
 
     break;
-    
 case 3:
+
+
     break;
-    
 case 4:
+
     break;
 
-}
-
-fclose(p);
-
-
-return 0;
 
 }
 
-void leerdatos(FILE*p){
 
-Datos aux;
 
-fread(&aux,sizeof(Datos),1,p);
+    }
+
+    }
+
+
+}
+
+
+
+
+
+
+    return 0;
+}
+
+//ClienteProducto
+void CargarListaClienteProducto(NodoRegistro*&InicioLista,Registro buf){
+
+NodoRegistro*nuevo = new NodoRegistro();
+
+bool EsMayor = false;
+
+nuevo->info.ID = buf.ID;
+
+nuevo->info.Valor  = buf.Valor;
+
+strcpy(nuevo->info.Cliente,buf.Cliente);
+
+strcpy(nuevo->info.Producto,buf.Producto);
+
+nuevo->Sgt  = NULL;
+
+if(InicioLista == NULL){
+
+    InicioLista = nuevo;
+
+}else if((strcmp(nuevo->info.Cliente,InicioLista->info.Cliente) == -1) || ((strcmp(nuevo->info.Cliente,InicioLista->info.Cliente) == 0) && (strcmp(nuevo->info.Producto,InicioLista->info.Producto) == -1))){
+
+nuevo->Sgt = InicioLista;
+
+InicioLista = nuevo;
+
+}else{
+
+
+NodoRegistro*AuxAnt = InicioLista;
+
+NodoRegistro*AuxSgt = InicioLista->Sgt;
+
+while(AuxSgt != NULL &&  ((strcmp(AuxSgt->info.Cliente,nuevo->info.Cliente) == -1) || (strcmp(AuxSgt->info.Cliente,nuevo->info.Cliente) == 0)) && !EsMayor  ){
+
+
+
+if((strcmp(AuxSgt->info.Cliente,nuevo->info.Cliente) == 0) && (strcmp(AuxSgt->info.Producto,nuevo->info.Producto) == 1) ){
+
+EsMayor = true;
+
+    }else{
+
+        AuxAnt = AuxSgt;
+
+AuxSgt = AuxSgt->Sgt;
+    }
+
+}
+
+AuxAnt->Sgt = nuevo;
+
+nuevo->Sgt  = AuxSgt;
+}
+
+
+
+}
+
+
+
+void MostrarArchivoYcargarLista(FILE*p,NodoRegistro*&InicioLista){
+
+Registro buf;
+
+fread(&buf.ID,sizeof(Registro::ID),1,p);
+fread(buf.Cliente,sizeof(Registro::Cliente),1,p);
+fread(buf.Producto,sizeof(Registro::Producto),1,p);
+fread(&buf.Valor,sizeof(Registro::Valor),1,p);
 
 while(!feof(p)){
-    cout<<aux.ID<<"  "<<aux.Cliente<<"  "<<aux.Producto<<"   "<<aux.Valor<<endl;
-fread(&aux,sizeof(Datos),1,p);
-    
+
+cout<<"id:"<<buf.ID<<" - Cliente:  "<<buf.Cliente<<" - Producto:"<<buf.Producto<<"- Valor "<<buf.Valor<<endl;
+
+CargarListaClienteProducto(InicioLista,buf);
+
+fread(&buf.ID,sizeof(Registro::ID),1,p);
+fread(buf.Cliente,sizeof(Registro::Cliente),1,p);
+fread(buf.Producto,sizeof(Registro::Producto),1,p);
+fread(&buf.Valor,sizeof(Registro::Valor),1,p);
+
 }
+
+
+}
+void EliminarNodos(NodoRegistro*&InicioLista){
+
+NodoRegistro*Aux = InicioLista;
+
+InicioLista = InicioLista->Sgt;
+
+delete(Aux);
+
+}
+void MostrarLista(NodoRegistro*InicioLista){
+
+while(InicioLista != NULL){
+
+cout<<"id:"<<InicioLista->info.ID<<" - Cliente:  "<<InicioLista->info.Cliente<<" - Producto:"<<InicioLista->info.Producto<<"- Valor "<<InicioLista->info.Valor<<endl;
+
+    InicioLista = InicioLista->Sgt;
+
+
+}
+
 }
