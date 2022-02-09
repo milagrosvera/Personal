@@ -2,40 +2,11 @@
 
 using namespace std;
 
-void mostrarvec(int vec[], int dim)
-{
-	for (int i = 0; i < dim; ++i)
-		cout << vec[i] << '\t';
-    cout << endl;
-}
+void mostrarvec(int vec[], int dim);
+void reverso(int vi[],int vf[], int dim);
+void mostrarmat(int m[][5], int dfil);
+void transpuesta(int m[][5],int mf[][5],int dfila);
 
-void reverso(int vi[],int vf[], int dim){
-        
-        for(int i = 0 ; i < dim; i++){
-            vi[i] = vf[dim -1 - i];
-        }
-        
-}
-void mostrarmat(int m[][5], int dfil)
-{
-        const int dcol = 5; 
-
-        for (int i = 0; i < dfil; ++i) {
-                for (int j = 0; j < dcol; ++j)
-                        cout << m[i][j] << '\t';
-                cout << endl;
-        }
-
-}
-
-void transpuesta(int m[][5],int mf[][5],int dfila){
-        const int dcol = 5;
-        for (int i = 0; i < dfila; ++i) {
-                for (int j = 0; j < dcol; ++j)
-                        
-             m[i][j] = mf[dfila - 1 -i][dcol -1-j ];
-        }
-}
 
 
 int main()
@@ -77,8 +48,39 @@ cout << "\n============================\n" << endl;
         transpuesta(matrizaux, matriz,dim5);
         mostrarmat(matrizaux,dim5);
 
-
-
-    
     return 0;
+}
+void mostrarvec(int vec[], int dim)
+{
+	for (int i = 0; i < dim; ++i)
+		cout << vec[i] << '\t';
+    cout << endl;
+}
+
+void reverso(int vi[],int vf[], int dim){
+        
+        for(int i = 0 ; i < dim; i++){
+            vi[i] = vf[dim -1 - i];
+        }
+        
+}
+void mostrarmat(int m[][5], int dfil)
+{
+        const int dcol = 5; 
+
+        for (int i = 0; i < dfil; ++i) {
+                for (int j = 0; j < dcol; ++j)
+                        cout << m[i][j] << '\t';
+                cout << endl;
+        }
+
+}
+
+void transpuesta(int m[][5],int mf[][5],int dfila){
+        const int dcol = 5;
+        for (int i = 0; i < dfila; ++i) {
+                for (int j = 0; j < dcol; ++j)
+                        
+             m[i][j] = mf[j ][i];
+        }
 }
